@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Binario | Обучение программированию</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Иконки Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Кастомные стили -->
+    <style>
+        :root {
+            --primary-color: #6f42c1; /* Фиолетовый - ассоциируется с креативностью */
+            --secondary-color: #f8f9fa;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #4a2a8a 100%);
+            color: white;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .course-card {
+            transition: transform 0.3s ease;
+            border: none;
+            border-radius: 10px;
+            height: 100%;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .code-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .floating-alert {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+<!-- Плавающее уведомление -->
+<div th:if="${message}" class="floating-alert alert alert-success alert-dismissible fade show" role="alert">
+    <span th:text="${message}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<!-- Навигационная панель -->
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--primary-color);">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#">
+            <i class="bi bi-code-square me-2"></i>Binario
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/auth/login"><i class="bi bi-box-arrow-in-right me-1"></i> Вход</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/auth/register"><i class="bi bi-person-plus me-1"></i> Регистрация</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Герой-секция -->
+<section class="hero-section py-5">
+    <div class="container py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-5 fw-bold mb-4">Стань мастером программирования</h1>
+                <p class="lead mb-4">Практические курсы по современным языкам программирования для студентов любого уровня.</p>
+                <div class="d-flex gap-3">
+                    <a href="/auth/register" class="btn btn-light btn-lg">Начать обучение</a>
+                    <a href="#courses" class="btn btn-outline-light btn-lg">Наши курсы</a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=600&q=80" alt="Программирование" class="img-fluid rounded shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Основной контент -->
+<main class="container my-5">
+    <section id="courses" class="mb-5">
+        <h2 class="text-center mb-5">Наши курсы</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="course-card card">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-filetype-java code-icon"></i>
+                        <h3 class="h5">Java для начинающих</h3>
+                        <p>Основы ООП, синтаксис Java и создание первых приложений.</p>
+                        <span class="badge bg-primary">Стартовый уровень</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card card">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-filetype-jsx code-icon"></i>
+                        <h3 class="h5">Web-разработка</h3>
+                        <p>HTML, CSS, JavaScript и основы создания веб-приложений.</p>
+                        <span class="badge bg-warning text-dark">Средний уровень</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="course-card card">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-database code-icon"></i>
+                        <h3 class="h5">Базы данных</h3>
+                        <p>SQL, проектирование баз данных и интеграция с приложениями.</p>
+                        <span class="badge bg-danger">Продвинутый уровень</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-5 py-4">
+        <div class="row align-items-center">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <h2 class="mb-4">Как мы обучаем?</h2>
+                <div class="d-flex mb-3">
+                    <div class="me-3">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <h4 class="h5">Практические задания</h4>
+                        <p class="mb-0">Реальные проекты и задачи для закрепления знаний.</p>
+                    </div>
+                </div>
+                <div class="d-flex mb-3">
+                    <div class="me-3">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <h4 class="h5">Поддержка преподавателей</h4>
+                        <p class="mb-0">Обратная связь и помощь в решении сложных задач.</p>
+                    </div>
+                </div>
+                <div class="d-flex">
+                    <div class="me-3">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <h4 class="h5">Гибкий график</h4>
+                        <p class="mb-0">Учитесь в удобное для вас время.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="h4 mb-4">Готовы начать?</h3>
+                        <p class="mb-4">Присоединяйтесь к тысячам студентов, которые уже осваивают программирование с нами.</p>
+                        <div class="d-grid gap-2">
+                            <a href="/auth/register" class="btn btn-primary btn-lg">Зарегистрироваться</a>
+                            <a href="/auth/login" class="btn btn-outline-primary">У меня уже есть аккаунт</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Футер -->
+<footer class="bg-dark text-white py-4">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h5><i class="bi bi-code-square me-2"></i>Binario</h5>
+                <p class="small mb-0">Образовательная платформа для будущих разработчиков</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="#" class="text-white me-3"><i class="bi bi-telegram"></i></a>
+                <a href="#" class="text-white me-3"><i class="bi bi-youtube"></i></a>
+                <a href="#" class="text-white"><i class="bi bi-github"></i></a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap 5 JS Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Кастомный JavaScript -->
+<script>
+    // Анимация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        // Автоматическое закрытие уведомления через 5 секунд
+        const alert = document.querySelector('.floating-alert');
+        if(alert) {
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, 5000);
+        }
+
+        // Плавное появление карточек курсов
+        const courseCards = document.querySelectorAll('.course-card');
+        courseCards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    });
+</script>
+</body>
+</html>
