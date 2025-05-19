@@ -1,13 +1,13 @@
 package com.binario.entity;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "course_section")
-public class CourseSection {
+@Table(name = "chapters")
+public class Chapter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,26 +15,19 @@ public class CourseSection {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column
     private String description;
 
-    @Column(columnDefinition = "TEXT")
-    private String content;
-
-    @Column(name = "section_order")
+    @Column(name = "chapter_order")
     private Integer order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @ManyToOne
-    @JoinColumn(name = "chapter_id")
-    private Chapter chapter;
-
-    @Column(nullable = false, updatable = false)
-    @CreationTimestamp
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
+    @OrderBy("order ASC")
+    private List<CourseSection> sections = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -56,14 +49,6 @@ public class CourseSection {
         this.description = description;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     public Integer getOrder() {
         return order;
     }
@@ -80,20 +65,11 @@ public class CourseSection {
         this.course = course;
     }
 
-    public Chapter getChapter() {
-        return chapter;
+    public List<CourseSection> getSections() {
+        return sections;
     }
 
-    public void setChapter(Chapter chapter) {
-        this.chapter = chapter;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+    public void setSections(List<CourseSection> sections) {
+        this.sections = sections;
     }
 }
-

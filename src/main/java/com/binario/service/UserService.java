@@ -29,7 +29,6 @@ public class UserService {
             throw new UserAlreadyExistsException("Пользователь с такой почтой уже существует");
         }
 
-        System.out.println("Hello");
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -57,6 +56,12 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Transactional
+    public void deleteAccount(User user) {
+
+        userRepository.delete(user);
     }
 
 }

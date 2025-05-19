@@ -13,10 +13,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+    public SecurityConfig(UserDetailsService userDetailsService, 
+                         CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
         this.userDetailsService = userDetailsService;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -24,15 +28,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/auth/login", "/auth/register").permitAll()
                         .requestMatchers("/courses/**").authenticated()
+                        .requestMatchers("/teacher/**").hasRole("TEACHER")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/courses", true)
+                        .successHandler(authenticationSuccessHandler)
                         .failureUrl("/auth/login?error=true")
                         .permitAll()
                 )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/?logout")
+                        .permitAll())
                 .userDetailsService(userDetailsService);
 
         return http.build();
