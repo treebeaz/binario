@@ -175,8 +175,10 @@ public class CourseSectionController {
             answer.setAnswerData(answerData);
             
             boolean isCorrect = userTestAnswerService.checkAnswer(test, answerData, answer);
-            answer.setCorrect(isCorrect);
-            answer.setScore(isCorrect ? test.getMaxScore() : 0);
+            if (!"code_answer".equals(test.getQuestionType())) {
+                answer.setCorrect(isCorrect);
+                answer.setScore(isCorrect ? test.getMaxScore() : 0);
+            }
 
             userTestAnswerService.saveAnswer(answer);
 

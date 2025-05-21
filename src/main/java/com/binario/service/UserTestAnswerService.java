@@ -5,6 +5,8 @@ import com.binario.entity.User;
 import com.binario.entity.UserTestAnswer;
 import com.binario.repository.UserTestAnswerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +20,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserTestAnswerService {
-    private final UserTestAnswerRepository userTestAnswerRepository;
-
-    public UserTestAnswerService(UserTestAnswerRepository userTestAnswerRepository) {
-        this.userTestAnswerRepository = userTestAnswerRepository;
-    }
+    @Autowired
+    private UserTestAnswerRepository userTestAnswerRepository;
 
     public UserTestAnswer submitAnswer(UserTestAnswer userTestAnswer) {
         return userTestAnswerRepository.save(userTestAnswer);
@@ -143,19 +142,13 @@ public class UserTestAnswerService {
             // Получаем код пользователя из answerData
             String userCode = answerData.toString();
             
-            // Создаем карту для хранения результатов выполнения
-            Map<String, Object> executionResults = new HashMap<>();
+            // Создаем Map для хранения кода
+            Map<String, Object> codeResult = new HashMap<>();
+            codeResult.put("code", userCode);
             
-            // TODO: Здесь должна быть реальная логика выполнения кода
-            // Пока просто сохраняем код и тестовые случаи
-            executionResults.put("userCode", userCode);
-            executionResults.put("testCases", test.getTestCases());
-            executionResults.put("executionTime", System.currentTimeMillis());
+            // Сохраняем код в Map
+            userTestAnswer.setCodeResult(codeResult);
             
-            // Сохраняем результаты в codeResult
-            userTestAnswer.setCodeResult(executionResults);
-            
-            // TODO: Здесь должна быть реальная проверка результатов
             return true;
         } catch (Exception e) {
             Map<String, Object> errorResult = new HashMap<>();
@@ -179,7 +172,6 @@ public class UserTestAnswerService {
             answerToSave = existingAnswer.get();
             answerToSave.setAnswerData(userTestAnswer.getAnswerData());
             answerToSave.setCodeResult(userTestAnswer.getCodeResult());
-            answerToSave.setCorrect(userTestAnswer.isCorrect());
             answerToSave.setScore(userTestAnswer.getScore());
             answerToSave.setSubmitAt(userTestAnswer.getSubmitAt());
         } else {
@@ -189,7 +181,6 @@ public class UserTestAnswerService {
             answerToSave.setTests(userTestAnswer.getTests());
             answerToSave.setAnswerData(userTestAnswer.getAnswerData());
             answerToSave.setCodeResult(userTestAnswer.getCodeResult());
-            answerToSave.setCorrect(userTestAnswer.isCorrect());
             answerToSave.setScore(userTestAnswer.getScore());
             answerToSave.setSubmitAt(userTestAnswer.getSubmitAt());
         }
@@ -197,6 +188,11 @@ public class UserTestAnswerService {
         // Проверяем ответ и обновляем codeResult если это тест с кодом
         if ("code_answer".equals(answerToSave.getTests().getQuestionType())) {
             checkAnswer(answerToSave.getTests(), answerToSave.getAnswerData(), answerToSave);
+            // Не выставляем isCorrect, оставляем null до проверки преподавателем
+        } else {
+            // Для остальных типов выставляем isCorrect
+            boolean correct = checkAnswer(answerToSave.getTests(), answerToSave.getAnswerData(), answerToSave);
+            answerToSave.setCorrect(correct);
         }
         
         userTestAnswerRepository.save(answerToSave);
@@ -205,5 +201,30 @@ public class UserTestAnswerService {
     @Transactional(readOnly = true)
     public Optional<UserTestAnswer> findByUserIdAndTests(Long userId, SectionsTests test) {
         return userTestAnswerRepository.findByUserIdAndTests(userId, test);
+    }
+
+    public List<UserTestAnswer> findUnverifiedCodeAnswers() {
+        List<UserTestAnswer> answers = userTestAnswerRepository.findByCodeResultIsNotNullAndIsCorrectFalse();
+        System.out.println("Found unverified code answers: " + answers.size());
+        for (UserTestAnswer answer : answers) {
+            System.out.println("Answer ID: " + answer.getId());
+            System.out.println("User: " + answer.getUser().getUsername());
+//            System.out.println("Test: " + answer.getTests().getTitle());
+            System.out.println("Code Result: " + answer.getCodeResult());
+        }
+        return answers;
+    }
+    
+    public UserTestAnswer findById(Long id) {
+        return userTestAnswerRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Answer not found"));
+    }
+    
+    @Transactional
+    public void reviewCodeAnswer(Long answerId, Integer score, String comment) {
+        UserTestAnswer answer = findById(answerId);
+        answer.setScore(score);
+        answer.setCorrect(true); // Помечаем как проверенное
+        userTestAnswerRepository.save(answer);
     }
 }
