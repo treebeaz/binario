@@ -37,7 +37,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" th:href="@{/student/profile}">
+                    <a class="nav-link" th:href="${#authorization.expression('hasRole(''ROLE_STUDENT'')') ? '/student/profile' : '/teacher/profile'}">
                         <i class="bi bi-person-circle me-1"></i>
                         <span sec:authentication="name"></span>
                     </a>

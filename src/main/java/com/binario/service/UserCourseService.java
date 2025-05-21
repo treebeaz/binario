@@ -63,4 +63,12 @@ public class UserCourseService {
     public boolean isUserEnrolledInCourse(Long userId, Long courseId) {
         return userCourseRepository.isUserEnrolledInCourse(userId, courseId);
     }
+
+    @Transactional(readOnly = true)
+    public List<User> getStudentsByCourseId(Long courseId) {
+        return userCourseRepository.findByCourseId(courseId)
+                .stream()
+                .map(UserCourse::getUser)
+                .collect(Collectors.toList());
+    }
 }

@@ -7,8 +7,9 @@ import com.binario.entity.User;
 import com.binario.repository.ChapterRepository;
 import com.binario.repository.CourseRepository;
 import com.binario.service.CourseSectionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ public class CourseSectionController {
     private final CourseSectionService courseSectionService;
     private final CourseRepository courseRepository;
     private final ChapterRepository chapterRepository;
+    private final Logger logger = LoggerFactory.getLogger(CourseSectionController.class);
 
     public CourseSectionController(CourseSectionService courseSectionService, 
                                  CourseRepository courseRepository, 
@@ -30,6 +32,8 @@ public class CourseSectionController {
         this.courseRepository = courseRepository;
         this.chapterRepository = chapterRepository;
     }
+
+
 
     // Показать список глав курса
     @GetMapping
@@ -41,13 +45,6 @@ public class CourseSectionController {
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
         List<Chapter> chapters = courseSectionService.getChaptersWithSections(courseId);
-
-        // Для отладки - проверьте данные в консоли
-        chapters.forEach(chapter -> {
-            System.out.println("Chapter: " + chapter.getTitle());
-            System.out.println("Sections count: " +
-                    (chapter.getSections() != null ? chapter.getSections().size() : "null"));
-        });
 
         model.addAttribute("user", user);
         model.addAttribute("course", course);
@@ -82,14 +79,20 @@ public class CourseSectionController {
                                      @PathVariable Long courseId,
                                      @PathVariable Long sectionId,
                                      Model model) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
-        
-        CourseSection section = courseSectionService.getSectionById(sectionId);
+        try {
+            Course course = courseRepository.findById(courseId)
+                    .orElseThrow(() -> new RuntimeException("Course not found"));
 
-        model.addAttribute("user", user);
-        model.addAttribute("course", course);
-        model.addAttribute("section", section);
-        return "sections/section-content";
+            CourseSection section = courseSectionService.getSectionById(sectionId);
+
+            model.addAttribute("user", user);
+            model.addAttribute("course", course);
+            model.addAttribute("section", section);
+            return "sections/section-content";
+        }
+        catch (Exception e) {
+            logger.error("Error loading section: {}", e.getMessage());
+            throw e;
+        }
     }
 }

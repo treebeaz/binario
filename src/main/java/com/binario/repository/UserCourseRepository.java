@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserCourseRepository extends JpaRepository<UserCourse, UserCourseId> {
     List<UserCourse> findByUserId(Long userId);
-
+    List<UserCourse> findByCourseId(Long courseId);
     boolean existsByUserIdAndCourseId(Long userId, Long courseId);
 
     @Query("SELECT uc FROM UserCourse uc WHERE uc.user.id = :userId")
