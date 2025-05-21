@@ -38,6 +38,17 @@ public class CourseSection {
     @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @OneToMany(mappedBy = "section", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SectionsTests> sectionsTests = new ArrayList<>();
+
+    public List<SectionsTests> getSectionsTests() {
+        return sectionsTests;
+    }
+
+    public void setSectionsTests(List<SectionsTests> sectionsTests) {
+        this.sectionsTests = sectionsTests;
+    }
+
     public Long getId() {
         return id;
     }

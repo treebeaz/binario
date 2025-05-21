@@ -47,6 +47,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserProgress> progresses;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserTestAnswer> testAnswers;
+
     public Long getId() {
         return id;
     }
@@ -119,4 +122,19 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public List<UserProgress> getProgresses() {
+        return progresses;
+    }
+
+    public void setProgresses(List<UserProgress> progresses) {
+        this.progresses = progresses;
+    }
+
+    public List<UserTestAnswer> getTestAnswers() {
+        return testAnswers;
+    }
+
+    public void setTestAnswers(List<UserTestAnswer> testAnswers) {
+        this.testAnswers = testAnswers;
+    }
 }

@@ -66,5 +66,4 @@ public class UserProgress {
     public void setLastAccessed(LocalDateTime lastAccessed) {
         this.lastAccessed = lastAccessed;
     }
-
 }

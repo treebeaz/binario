@@ -101,6 +101,7 @@
     </style>
 </head>
 <body>
+<!-- CHAPTERS -->
     <div th:replace="fragments/navbar :: navbar"></div>
 
     <div class="container">
@@ -112,6 +113,14 @@
                 </a>
             </div>
         </header>
+
+        <!-- Добавляем блок с результатами теста -->
+        <div th:if="${testResults}" class="alert alert-success mt-3">
+            <h4>Результаты тестирования</h4>
+            <p>Правильных ответов: <span th:text="${correctAnswers}"></span> из <span th:text="${totalQuestions}"></span></p>
+            <p>Набрано баллов: <span th:text="${totalScore}"></span> из <span th:text="${maxPossibleScore}"></span></p>
+            <p>Процент выполнения: <span th:text="${#numbers.formatPercent(totalScore/maxPossibleScore, 1, 2)}"></span></p>
+        </div>
 
         <div th:if="${chapters}" class="mb-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -138,20 +147,33 @@
                         <div class="accordion-body">
                             <p class="text-muted mb-3" th:text="${chapter.description}">Описание главы</p>
 
-                            <!-- Список разделов -->
-                            <!-- Список разделов -->
                             <div class="list-group">
-                                <a th:each="section : ${chapter.sections}"
-                                   th:href="@{/courses/{courseId}/sections/{sectionId}(courseId=${course.id}, sectionId=${section.id})}"
-                                   class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="mb-1" th:text="${section.title}">Название раздела</h6>
-                                        <small class="text-muted" th:text="${section.description}">Описание раздела</small>
+                                <div th:each="section : ${chapter.sections}"
+                                     class="list-group-item d-flex justify-content-between align-items-start gap-3 flex-wrap">
+
+                                    <div class="flex-grow-1">
+                                        <a th:href="@{/courses/{courseId}/sections/{sectionId}(courseId=${course.id}, sectionId=${section.id})}"
+                                           class="text-decoration-none text-dark">
+                                            <h6 class="mb-1" th:text="${section.title}">Название раздела</h6>
+                                            <small class="text-muted d-block" th:text="${section.description}">Описание раздела</small>
+                                        </a>
                                     </div>
-                                    <span class="badge bg-primary rounded-pill">
-                                        <i class="bi bi-arrow-right"></i>
-                                    </span>
-                                </a>
+
+                                    <div class="d-flex flex-column align-items-end">
+                                        <div th:if="${testsBySection[section.id] != null and !#lists.isEmpty(testsBySection[section.id])}">
+                                            <a th:href="@{/courses/{courseId}/sections/{sectionId}/tests(courseId=${course.id}, sectionId=${section.id})}"
+                                               class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2 mb-2">
+                                                <i class="bi bi-pencil-square"></i>
+                                                Пройти тест
+                                            </a>
+                                        </div>
+
+                                        <span class="badge bg-primary rounded-pill">
+                                            <i class="bi bi-arrow-right"></i>
+                                        </span>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>

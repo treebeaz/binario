@@ -19,22 +19,11 @@ public class CourseController {
     public CourseController(CourseService courseService) {
         this.courseService = courseService;
     }
-    // Список всех курсов
     @GetMapping
     public String showCourses(@AuthenticationPrincipal User user,
                               Model model) {
         model.addAttribute("courses", courseService.getAllCourse());
-        model.addAttribute("user", user); // Добавляем пользователя в модель
+        model.addAttribute("user", user);
         return "courses/list";
     }
-
-//    // Детали курса с главами
-//    @GetMapping("/{courseId}")
-//    public String showCourseDetails(@PathVariable Long courseId,
-//                                    @AuthenticationPrincipal User user,
-//                                    Model model) {
-//        model.addAttribute("course", courseService.getCourseById(courseId));
-//        model.addAttribute("user", user);
-//        return "courses/content";
-//    }
 }
