@@ -4,130 +4,389 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Тесты</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.min.css">
     <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fa;
+            --accent-color: #2e59d9;
+            --text-color: #2d3748;
+            --light-gray: #edf2f7;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .test-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .test-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .question-text::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            height: 1.5rem;
+            width: 4px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            background: var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover {
+            background: #e2e8f0;
+            transform: translateX(4px);
+        }
+
+        .option-item input[type="radio"],
+        .option-item input[type="checkbox"] {
+            margin-right: 1rem;
+            transform: scale(1.2);
+        }
+
+        .code-editor {
+            font-family: 'Fira Code', monospace;
+            background: #f6f8fa;
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        .submit-btn {
+            background: var(--primary-color);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-counter {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            margin-right: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .course-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-radius: 0 0 12px 12px;
+        }
+
+        @media (max-width: 768px) {
+            .test-container {
+                padding: 1.5rem;
+            }
+        }
         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 56px;
         }
-        .header {
-            background-color: #fff;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #eee;
-        }
-        .back-link {
-            color: #4e73df;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            font-weight: 500;
-        }
-        .back-link:hover {
-            color: #3a5ec0;
-        }
-        .chapter-header {
-            background: #fff;
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .chapter-title {
-            color: #2d3748;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #4e73df;
-        }
-        .chapter-description {
-            color: #718096;
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        .section-card {
-            background: #fff;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .section-card:hover {
-            transform: translateX(5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .section-title {
-            color: #2d3748;
-            text-decoration: none;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .section-title:hover {
-            color: #4e73df;
-        }
-        .section-info {
-            color: #718096;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-        .no-sections {
-            text-align: center;
-            padding: 3rem;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
+
         .no-sections i {
             font-size: 3rem;
             color: #cbd5e0;
             margin-bottom: 1rem;
         }
+
+        .navbar-binario {
+            background-color: #4e73df !important;
+            padding: 0.5rem 1rem !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+        }
+
+        .navbar-binario .navbar-brand,
+        .navbar-binario .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+        }
+
+        .navbar-binario .navbar-brand:hover,
+        .navbar-binario .nav-link:hover {
+            color: white !important;
+        }
+
+        .navbar-binario .navbar-toggler {
+            border-color: rgba(255,255,255,0.5) !important;
+        }
     </style>
 </head>
 
 <body>
-    <div th:replace="fragments/navbar :: navbar"></div>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="course-header">
     <div class="container">
-        <h2 th:text="${course.name}"></h2>
-        <h3 th:text="${section.title}"></h3>
-        <form th:action="@{/courses/{courseId}/sections/{sectionId}/tests/submit(courseId=${course.id}, sectionId=${section.id})}" method="post">
-            <div th:each="test, iterStat : ${tests}" class="mb-4">
-                <p><b th:text="'Вопрос ' + ${iterStat.count} + ':'"></b></p>
-                <p th:text="${test.questionText}"></p>
-                <div th:switch="${test.questionType}">
-                    <div th:case="'single_choice'">
-                        <div th:each="option : ${test.answerOptions}">
-                            <label>
-                                <input type="radio" th:name="${'answer_' + test.id}" th:value="${option.key}"/>
-                                <span th:text="${option.value}"></span>
-                            </label><br/>
-                        </div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#" th:href="@{/courses}">Курсы</a></li>
+                <li class="breadcrumb-item"><a href="#" th:href="@{/courses/{id}(id=${course.id})}" th:text="${course.name}"></a></li>
+                <li class="breadcrumb-item active" aria-current="page" th:text="${section.title}"></li>
+            </ol>
+        </nav>
+        <h1 class="display-5 mb-0" th:text="${section.title}"></h1>
+        <p class="lead mb-0" th:text="'Тест по разделу: ' + ${course.name}"></p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <form th:action="@{/courses/{courseId}/sections/{sectionId}/tests/submit(courseId=${course.id}, sectionId=${section.id})}" method="post">
+        <div th:each="test, iterStat : ${tests}" class="test-container" th:attr="data-test-id=${test.id}">
+            <div class="question-text">
+                <span class="test-counter" th:text="${iterStat.count}"></span>
+                <span th:text="${test.questionText}"></span>
+            </div>
+
+            <div th:switch="${test.questionType}">
+                <div th:case="'single_choice'">
+                    <div th:each="option : ${test.answerOptions}" class="option-item">
+                        <input type="radio" th:id="${'option_' + test.id + '_' + option.key}"
+                               th:name="${'answer_' + test.id}" th:value="${option.key}">
+                        <label th:for="${'option_' + test.id + '_' + option.key}" th:text="${option.value}"></label>
                     </div>
-                    <div th:case="'multiple_choice'">
-                        <div th:each="option : ${test.answerOptions}">
-                            <label>
-                                <input type="checkbox" th:name="${'answer_' + test.id}" th:value="${option.key}"/>
-                                <span th:text="${option.value}"></span>
-                            </label><br/>
-                        </div>
+                </div>
+
+                <div th:case="'multiple_choice'">
+                    <div th:each="option : ${test.answerOptions}" class="option-item">
+                        <input type="checkbox" th:id="${'option_' + test.id + '_' + option.key}"
+                               th:name="${'answer_' + test.id}" th:value="${option.key}">
+                        <label th:for="${'option_' + test.id + '_' + option.key}" th:text="${option.value}"></label>
                     </div>
-                    <div th:case="'text_answer'">
-                        <textarea th:name="${'answer_' + test.id}" rows="4" class="form-control"></textarea>
+                </div>
+
+                <div th:case="'text_answer'">
+                        <textarea th:name="${'answer_' + test.id}" rows="4" class="form-control"
+                                  placeholder="Введите ваш ответ..." style="min-height: 120px;"></textarea>
+                </div>
+
+                <div th:case="'code_answer'" class="code-answer-block" data-test-id="${test.id}">
+                    <div class="mb-3">
+                        <label class="form-label">Редактор кода</label>
+                        <div id="editor-container-${test.id}" style="height: 400px; border: 1px solid #ddd; border-radius: 4px;"></div>
+                        <textarea th:name="${'answer_' + test.id}" id="hidden-code-${test.id}" style="display: none;"></textarea>
                     </div>
-                    <div th:case="'code_answer'">
-                        <textarea th:name="${'answer_' + test.id}" rows="8" class="form-control monospace"></textarea>
+
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-outline-primary me-2" onclick="runCode('${test.id}')">
+                            <i class="bi bi-play-fill"></i> Запустить код
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary" onclick="formatCode('${test.id}')">
+                            <i class="bi bi-braces"></i> Форматировать
+                        </button>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Результат выполнения</label>
+                        <pre id="output-${test.id}" class="bg-dark text-white p-3 rounded" style="min-height: 100px;"></pre>
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-success">Отправить ответы</button>
-        </form>
-    </div>
+        </div>
 
-    <style>
-        .monospace { font-family: monospace; }
-    </style>
+        <div class="d-flex justify-content-between mt-4">
+            <a href="#" th:href="@{/courses/{id}(id=${course.id})}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Вернуться к курсу
+            </a>
+            <button type="submit" class="btn submit-btn">
+                <i class="bi bi-send"></i> Отправить ответы
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    window.require = {
+        paths: {
+            vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs'
+        }
+    };
+</script>
+
+<script>var require = { paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs' }};</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/loader.min.js"></script>
+
+<script>
+
+    window.addEventListener('DOMContentLoaded', function () {
+        require(['vs/editor/editor.main'], function () {
+            // Здесь твой код инициализации редакторов
+            document.querySelectorAll('.code-answer-block').forEach(container => {
+                const testId = container.getAttribute('data-test-id');
+
+
+                const editor = monaco.editor.create(document.getElementById(`editor-container-${testId}`), {
+                    value: document.getElementById(`hidden-code-${testId}`).value || '// Введите ваш код здесь\n',
+                    language: 'java',
+                    theme: 'vs-dark',
+                    automaticLayout: true,
+                    minimap: { enabled: false }
+                });
+
+                editor.onDidChangeModelContent(function () {
+                    document.getElementById(`hidden-code-${testId}`).value = editor.getValue();
+                });
+
+                window[`editor_${testId}`] = editor;
+            });
+        });
+    });
+
+    // Функция запуска кода (используем Judge0 API)
+    function runCode(testId) {
+        const code = window[`editor_${testId}`].getValue();
+        const outputElement = document.getElementById(`output-${testId}`);
+
+        outputElement.innerHTML = '<i class="bi bi-hourglass"></i> Выполнение кода...';
+
+        // Пример использования Judge0 API
+        fetch('https://judge0-ce.p.rapidapi.com/submissions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-RapidAPI-Key': 'e356adea5fmsh216c9cb12be0dddp14af73jsn46a1abb32390',
+                'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+            },
+            body: JSON.stringify({
+                source_code: code,
+                language_id: 62
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                const token = data.token;
+                checkSubmissionStatus(token, testId);
+            })
+            .catch(error => {
+                outputElement.innerHTML = `<span class="text-danger">Ошибка: ${error.message}</span>`;
+            });
+    }
+
+    function checkSubmissionStatus(token, testId) {
+        const outputElement = document.getElementById(`output-${testId}`);
+
+        const checkStatus = setInterval(() => {
+            fetch(`https://judge0-ce.p.rapidapi.com/submissions/${token}`, {
+                headers: {
+                    'X-RapidAPI-Key': 'e356adea5fmsh216c9cb12be0dddp14af73jsn46a1abb32390',
+                    'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status.id > 2) { // Завершено
+                        clearInterval(checkStatus);
+                        if (data.stdout) {
+                            outputElement.textContent = data.stdout;
+                        } else if (data.stderr) {
+                            outputElement.innerHTML = `<span class="text-danger">${data.stderr}</span>`;
+                        } else {
+                            outputElement.textContent = data.message || 'Выполнение завершено';
+                        }
+                    }
+                });
+        }, 1000);
+    }
+
+    function formatCode(testId) {
+        const editor = window[`editor_${testId}`];
+        const model = editor.getModel();
+        const range = model.getFullModelRange();
+        const text = model.getValueInRange(range);
+
+        try {
+            const formatted = prettier.format(text, {
+                parser: "babel",
+                plugins: prettierPlugins,
+                tabWidth: 2,
+                semi: true,
+                singleQuote: true
+            });
+            editor.setValue(formatted);
+        } catch (e) {
+            console.error("Formatting error:", e);
+        }
+    }
+</script>
+<script>
+    // Подсветка выбранных вариантов
+    document.querySelectorAll('.option-item').forEach(item => {
+        item.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'INPUT') {
+                const input = this.querySelector('input');
+                input.checked = !input.checked;
+                this.classList.toggle('bg-primary', input.checked);
+                this.classList.toggle('text-white', input.checked);
+            }
+        });
+    });
+
+    // Автоматическое увеличение высоты textarea
+    document.querySelectorAll('textarea').forEach(textarea => {
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.nls.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.js"></script>
+
+<!--&lt;!&ndash; Prettier для форматирования &ndash;&gt;-->
+<!--<script src="https://cdn.jsdelivr.net/npm/prettier@2.7.1/standalone.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/prettier@2.7.1/parser-babel.min.js"></script>-->
 </body>
+</html>

@@ -2,6 +2,7 @@ package com.binario.entity;
 
 import com.binario.converter.MapJsonConverter;
 import jakarta.persistence.*;
+import jakarta.websocket.ClientEndpoint;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -43,6 +44,9 @@ public class UserTestAnswer {
 
     @Column(name = "submit_at")
     private LocalDate submitAt = LocalDate.now();
+
+    @Column(name = "teacher_comment", columnDefinition = "TEXT")
+    private String teacherComment;
 
     public Long getId() {
         return id;
@@ -106,5 +110,13 @@ public class UserTestAnswer {
 
     public void setSubmitAt(LocalDate submitAt) {
         this.submitAt = submitAt;
+    }
+
+    public String getTeacherComment() {
+        return teacherComment;
+    }
+
+    public void setTeacherComment(String teacherComment) {
+        this.teacherComment = teacherComment;
     }
 }

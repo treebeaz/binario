@@ -5,18 +5,19 @@ import com.binario.entity.Chapter;
 import com.binario.entity.CourseSection;
 import com.binario.entity.User;
 import com.binario.repository.ChapterRepository;
-import com.binario.service.ChapterService;
-import com.binario.service.CourseService;
-import com.binario.service.CourseSectionService;
-import com.binario.service.UserCourseService;
+import com.binario.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/teacher/courses")
@@ -27,15 +28,17 @@ public class TeacherCourseController {
     private final ChapterService chapterService;
     private final CourseSectionService courseSectionService;
     private final UserCourseService userCourseService;
+    private final UserService userService;
 
     @Autowired
     public TeacherCourseController(CourseService courseService,
                                    ChapterService chapterService,
-                                   CourseSectionService courseSectionService, UserCourseService userCourseService) {
+                                   CourseSectionService courseSectionService, UserCourseService userCourseService, UserService userService) {
         this.courseService = courseService;
         this.chapterService = chapterService;
         this.courseSectionService = courseSectionService;
         this.userCourseService = userCourseService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -136,4 +139,48 @@ public class TeacherCourseController {
 
         return "teacher/courses/students";
     }
+
+    @GetMapping("/new")
+    public String newCourseForm(Model model) {
+        model.addAttribute("course", new Course());
+        return "teacher/courses/course-form";
+    }
+
+    @PostMapping
+    public String createCourse(@ModelAttribute Course course,
+                               Authentication authentication,
+                               RedirectAttributes redirectAttributes) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User teacher = userService.findByUsername(userDetails.getUsername());
+        course.setCreatedBy(teacher);
+        courseService.saveCourse(course);
+
+        redirectAttributes.addFlashAttribute("message", "Курс успешно создан");
+        return "redirect:/teacher/courses";
+    }
+
+    @PostMapping("/{courseId}/delete")
+    public String deleteCourse(@PathVariable Long courseId,
+                               Authentication authentication,
+                               RedirectAttributes redirectAttributes) {
+        Course course = courseService.getCourseById(courseId);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User teacher = userService.findByUsername(userDetails.getUsername());
+
+        if(!Objects.equals(teacher.getId(), course.getCreatedBy().getId())) {
+            redirectAttributes.addFlashAttribute("error", "Вы не можете удалить этот курс");
+            return "redirect:/teacher/courses";
+        }
+
+        try{
+            courseService.deleteCourse(courseId);
+            redirectAttributes.addFlashAttribute("message", "Курс успешно удален");
+        }
+        catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Ошибка при удалении курса");
+        }
+
+        return "redirect:/teacher/courses";
+    }
+
 } 

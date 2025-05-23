@@ -3,10 +3,12 @@ package com.binario.service;
 import com.binario.entity.SectionsTests;
 import com.binario.repository.SectionsTestsRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class SectionsTestsService {
     private final SectionsTestsRepository sectionsTestsRepository;
 
@@ -14,7 +16,7 @@ public class SectionsTestsService {
         this.sectionsTestsRepository = sectionsTestsRepository;
     }
 
-    public List<SectionsTests> getTestBySection(Long sectionId) {
+    public List<SectionsTests> getTestBySectionId(Long sectionId) {
         return sectionsTestsRepository.findBySectionId(sectionId);
     }
 
@@ -27,7 +29,29 @@ public class SectionsTestsService {
         return sectionsTestsRepository.save(sectionsTests);
     }
 
-    public void delete(SectionsTests sectionsTests) {
-        sectionsTestsRepository.delete(sectionsTests);
+    public void createTests(SectionsTests sectionsTests) {
+        sectionsTestsRepository.save(sectionsTests);
     }
+
+    public void updateTests(Long testId, SectionsTests sectionsTests) {
+        SectionsTests test = getTestById(testId);
+
+        test.setSection(sectionsTests.getSection());
+        test.setQuestionType(sectionsTests.getQuestionType());
+        test.setQuestionText(sectionsTests.getQuestionText());
+        test.setAnswerOptions(sectionsTests.getAnswerOptions());
+        test.setTextAnswer(sectionsTests.getTextAnswer());
+        test.setCode(sectionsTests.getCode());
+        test.setTestCases(sectionsTests.getTestCases());
+        test.setMaxScore(sectionsTests.getMaxScore());
+        test.setSortOrder(sectionsTests.getSortOrder());
+
+        sectionsTestsRepository.save(test);
+    }
+
+    public void deleteTests(Long testId) {
+        sectionsTestsRepository.deleteById(testId);
+    }
+
+
 }

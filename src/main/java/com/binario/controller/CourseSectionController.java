@@ -62,7 +62,7 @@ public class CourseSectionController {
         Map<Long, List<SectionsTests>> testsBySection = new HashMap<>();
         for (Chapter chapter : chapters) {
             for (CourseSection section : chapter.getSections()) {
-                List<SectionsTests> tests = sectionsTestsService.getTestBySection(section.getId());
+                List<SectionsTests> tests = sectionsTestsService.getTestBySectionId(section.getId());
                 if (tests != null && !tests.isEmpty()) {
                     testsBySection.put(section.getId(), tests);
                 }
@@ -128,7 +128,7 @@ public class CourseSectionController {
                 .orElseThrow(() -> new RuntimeException("Course not found"));
         CourseSection section = courseSectionService.getSectionById(sectionId);
 
-        List<SectionsTests> tests = sectionsTestsService.getTestBySection(sectionId);
+        List<SectionsTests> tests = sectionsTestsService.getTestBySectionId(sectionId);
 
         model.addAttribute("user", user);
         model.addAttribute("course", course);
@@ -145,7 +145,7 @@ public class CourseSectionController {
                              @RequestParam MultiValueMap<String, String> allRequestParams,
                              RedirectAttributes redirectAttributes) {
         User user = userService.findByUsername(userDetails.getUsername());
-        List<SectionsTests> tests = sectionsTestsService.getTestBySection(sectionId);
+        List<SectionsTests> tests = sectionsTestsService.getTestBySectionId(sectionId);
 
         int totalScore = 0;
         int maxPossibleScore = 0;
@@ -165,17 +165,16 @@ public class CourseSectionController {
                 answerData.put("values", answers);
             }
 
-            // Проверяем, есть ли уже ответ от этого пользователя
             UserTestAnswer answer = userTestAnswerService.findByUserIdAndTests(user.getId(), test)
                     .orElse(new UserTestAnswer());
 
-            // Обновляем или создаем новый ответ
             answer.setUser(user);
             answer.setTests(test);
             answer.setAnswerData(answerData);
             
             boolean isCorrect = userTestAnswerService.checkAnswer(test, answerData, answer);
             if (!"code_answer".equals(test.getQuestionType())) {
+
                 answer.setCorrect(isCorrect);
                 answer.setScore(isCorrect ? test.getMaxScore() : 0);
             }

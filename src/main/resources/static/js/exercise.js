@@ -53,7 +53,7 @@ function submitAnswers(answers) {
         })
         .then(result => {
             if (result.status === 'COMPLETED') {
-                showSuccess(`Тест завершен! Ваш результат: ${result.score}%`);
+                showSuccess(`Тест завершен!%`);
                 setTimeout(() => {
                     window.location.href = '/student/courses';
                 }, 2000);
@@ -69,7 +69,7 @@ function submitAnswers(answers) {
 
 function handleSubmissionResult(result) {
     if (result.status === 'COMPLETED') {
-        showSuccess(`Тест завершен! Ваш результат: ${result.score}%`);
+        showSuccess(`Тест завершен%`);
         setTimeout(() => {
             window.location.href = '/student/courses';
         }, 2000);

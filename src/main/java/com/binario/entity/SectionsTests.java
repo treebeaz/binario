@@ -1,8 +1,10 @@
 package com.binario.entity;
 
 import com.binario.converter.AnswerOptionListConverter;
+import com.binario.converter.ChoiceAnswerListConverter;
 import com.binario.converter.TestCaseListConverter;
 import com.binario.model.AnswerOption;
+import com.binario.model.ChoiceAnswer;
 import com.binario.model.TestCase;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -54,8 +56,25 @@ public class SectionsTests {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "multiple_allowed", nullable = false)
+    private boolean multipleAllowed = false;
+
+    @Column(name = "choice_answers", columnDefinition = "jsonb")
+    @Convert(converter = ChoiceAnswerListConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)
+    private List<ChoiceAnswer> choiceAnswers;
+
     @OneToMany(mappedBy = "tests", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserTestAnswer> userTestAnswers;
+
+    @Transient
+    private String rawAnswerOptions;
+
+    @Transient
+    private String rawTestCases;
+
+    @Transient
+    private String rawChoiceAnswers;
 
     public Long getId() {
         return id;
@@ -75,6 +94,22 @@ public class SectionsTests {
 
     public String getQuestionType() {
         return questionType;
+    }
+
+    public String getRawAnswerOptions() {
+        return rawAnswerOptions;
+    }
+
+    public void setRawAnswerOptions(String rawAnswerOptions) {
+        this.rawAnswerOptions = rawAnswerOptions;
+    }
+
+    public String getRawTestCases() {
+        return rawTestCases;
+    }
+
+    public void setRawTestCases(String rawTestCases) {
+        this.rawTestCases = rawTestCases;
     }
 
     public void setQuestionType(String questionType) {
@@ -151,5 +186,29 @@ public class SectionsTests {
 
     public void setUserTestAnswers(List<UserTestAnswer> userTestAnswers) {
         this.userTestAnswers = userTestAnswers;
+    }
+
+    public boolean isMultipleAllowed() {
+        return multipleAllowed;
+    }
+
+    public void setMultipleAllowed(boolean multipleAllowed) {
+        this.multipleAllowed = multipleAllowed;
+    }
+
+    public List<ChoiceAnswer> getChoiceAnswers() {
+        return choiceAnswers;
+    }
+
+    public void setChoiceAnswers(List<ChoiceAnswer> choiceAnswers) {
+        this.choiceAnswers = choiceAnswers;
+    }
+
+    public String getRawChoiceAnswers() {
+        return rawChoiceAnswers;
+    }
+
+    public void setRawChoiceAnswers(String rawChoiceAnswers) {
+        this.rawChoiceAnswers = rawChoiceAnswers;
     }
 }

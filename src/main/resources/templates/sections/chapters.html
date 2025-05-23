@@ -116,10 +116,7 @@
 
         <!-- Добавляем блок с результатами теста -->
         <div th:if="${testResults}" class="alert alert-success mt-3">
-            <h4>Результаты тестирования</h4>
-            <p>Правильных ответов: <span th:text="${correctAnswers}"></span> из <span th:text="${totalQuestions}"></span></p>
-            <p>Набрано баллов: <span th:text="${totalScore}"></span> из <span th:text="${maxPossibleScore}"></span></p>
-            <p>Процент выполнения: <span th:text="${#numbers.formatPercent(totalScore/maxPossibleScore, 1, 2)}"></span></p>
+            <h4>Результаты отправлены на проверку</h4>
         </div>
 
         <div th:if="${chapters}" class="mb-4">

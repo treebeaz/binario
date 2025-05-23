@@ -38,11 +38,6 @@ public class TeacherController {
     @GetMapping("/code-reviews")
     public String getCodeReviews(Model model) {
         List<UserTestAnswer> unverifiedCodeAnswers = userTestAnswerService.findUnverifiedCodeAnswers();
-        System.out.println("Found unverified answers: " + unverifiedCodeAnswers.size());
-        for (UserTestAnswer answer : unverifiedCodeAnswers) {
-            System.out.println("Answer ID: " + answer.getId());
-            System.out.println("Code Result: " + answer.getCodeResult());
-        }
         model.addAttribute("codeAnswers", unverifiedCodeAnswers);
         return "teacher/code-reviews";
     }
@@ -50,8 +45,6 @@ public class TeacherController {
     @GetMapping("/code-review/{answerId}")
     public String getCodeReview(@PathVariable Long answerId, Model model) {
         UserTestAnswer answer = userTestAnswerService.findById(answerId);
-        System.out.println("Reviewing answer ID: " + answerId);
-        System.out.println("Code Result: " + answer.getCodeResult());
         model.addAttribute("answer", answer);
         return "teacher/code-review";
     }
