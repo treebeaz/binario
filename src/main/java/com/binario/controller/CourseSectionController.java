@@ -7,7 +7,6 @@ import com.binario.service.CourseSectionService;
 import com.binario.service.SectionsTestsService;
 import com.binario.service.UserService;
 import com.binario.service.UserTestAnswerService;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -15,8 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +81,7 @@ public class CourseSectionController {
                                      Model model) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
-        
+
         Chapter chapter = chapterRepository.findById(chapterId)
                 .orElseThrow(() -> new RuntimeException("Chapter not found"));
 
@@ -171,12 +168,15 @@ public class CourseSectionController {
             answer.setUser(user);
             answer.setTests(test);
             answer.setAnswerData(answerData);
-            
+
             boolean isCorrect = userTestAnswerService.checkAnswer(test, answerData, answer);
             if (!"code_answer".equals(test.getQuestionType())) {
 
                 answer.setCorrect(isCorrect);
                 answer.setScore(isCorrect ? test.getMaxScore() : 0);
+            }
+            else {
+                answer.setScore(0);
             }
 
             userTestAnswerService.saveAnswer(answer);
@@ -187,7 +187,6 @@ public class CourseSectionController {
             }
         }
 
-        // Добавляем результаты в атрибуты для редиректа
         redirectAttributes.addFlashAttribute("testResults", true);
         redirectAttributes.addFlashAttribute("totalScore", totalScore);
         redirectAttributes.addFlashAttribute("maxPossibleScore", maxPossibleScore);

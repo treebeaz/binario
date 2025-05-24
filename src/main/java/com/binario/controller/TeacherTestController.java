@@ -5,7 +5,6 @@ import com.binario.entity.CourseSection;
 import com.binario.entity.SectionsTests;
 import com.binario.service.CourseSectionService;
 import com.binario.service.SectionsTestsService;
-import jdk.jfr.ContentType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Locale;
 
 @Controller
 @RequestMapping("/teacher/sections/{sectionId}/tests")
@@ -69,9 +67,6 @@ public class TeacherTestController {
         if(test.getRawChoiceAnswers() != null) {
             test.setChoiceAnswers(jsonConverterHelper.parseChoiceAnswers(test.getRawChoiceAnswers()));
         }
-//        if(test.getRawTestCases() != null) {
-//            test.setTestCases(jsonConverterHelper.parseTestCases(test.getRawTestCases()));
-//        }
 
         sectionsTestsService.createTests(test);
         redirectAttributes.addFlashAttribute("message", "Тест успешно добавлен");

@@ -30,20 +30,4 @@ public class JsonConverterHelper {
     public List<ChoiceAnswer> parseChoiceAnswers(String json) {
         return choiceAnswerListConverter.convertToEntityAttribute(json);
     }
-
-    public List<TestCase> parseTestCases(String json) {
-        return testCaseListConverter.convertToEntityAttribute(json);
-    };
-
-    public String toJsonAnswerOptions(Map<String, String> answerOptions) {
-        return answerOptionListConverter.convertToDatabaseColumn(answerOptions);
-    }
-
-    public String toJsonChoiceAnswers(List<ChoiceAnswer> choiceAnswers) {
-        return choiceAnswerListConverter.convertToDatabaseColumn(choiceAnswers);
-    }
-
-    public String toJsonTestCases(List<TestCase> testCases) {
-        return testCaseListConverter.convertToDatabaseColumn(testCases);
-    }
 }

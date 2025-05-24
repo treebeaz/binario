@@ -2,14 +2,11 @@ package com.binario.entity;
 
 import com.binario.converter.AnswerOptionListConverter;
 import com.binario.converter.ChoiceAnswerListConverter;
-import com.binario.converter.TestCaseListConverter;
-import com.binario.model.AnswerOption;
 import com.binario.model.ChoiceAnswer;
 import com.binario.model.TestCase;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;

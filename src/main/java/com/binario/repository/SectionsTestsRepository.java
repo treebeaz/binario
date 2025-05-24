@@ -7,5 +7,4 @@ import java.util.List;
 
 public interface SectionsTestsRepository extends JpaRepository<SectionsTests, Long> {
     List<SectionsTests> findBySectionId(Long sectionId);
-    List<SectionsTests> findBySectionIdOrderBySortOrderAsc(Long sectionId);
 }

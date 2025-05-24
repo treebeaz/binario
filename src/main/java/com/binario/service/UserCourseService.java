@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserCourseService {
     private final UserCourseRepository userCourseRepository;
     private final UserRepository userRepository;
@@ -26,7 +27,6 @@ public class UserCourseService {
         this.courseRepository = courseRepository;
     }
 
-    @Transactional
     public void enrollUserInCourse(Long userId, Long courseId) {
         if (userCourseRepository.existsByUserIdAndCourseId(userId, courseId)) {
             throw new RuntimeException("Пользователь уже зачислен на этот курс");
@@ -41,7 +41,6 @@ public class UserCourseService {
         userCourseRepository.save(userCourse);
     }
 
-    @Transactional(readOnly = true)
     public List<Course> getEnrolledCourses(Long userId) {
         return userCourseRepository.findEnrolledCoursesByUserId(userId)
                 .stream()
@@ -49,7 +48,6 @@ public class UserCourseService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public List<Course> getAvailableCourses(Long userId) {
         List<Course> enrolledCourses = getEnrolledCourses(userId);
         List<Course> allCourses = courseRepository.findAll();
@@ -59,16 +57,18 @@ public class UserCourseService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public boolean isUserEnrolledInCourse(Long userId, Long courseId) {
-        return userCourseRepository.isUserEnrolledInCourse(userId, courseId);
-    }
-
-    @Transactional(readOnly = true)
     public List<User> getStudentsByCourseId(Long courseId) {
         return userCourseRepository.findByCourseId(courseId)
                 .stream()
                 .map(UserCourse::getUser)
                 .collect(Collectors.toList());
+    }
+
+    public List<UserCourse> findByCourseId(Long courseId) {
+        return userCourseRepository.findByCourseId(courseId);
+    }
+
+    public List<UserCourse> getCourseByUserId(Long userId) {
+        return userCourseRepository.findCourseByUserId(userId);
     }
 }

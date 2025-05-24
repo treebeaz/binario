@@ -21,6 +21,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             color: var(--text-color);
             line-height: 1.6;
+            padding-top: 80px;
         }
 
         .test-container {
@@ -77,14 +78,6 @@
         .option-item input[type="checkbox"] {
             margin-right: 1rem;
             transform: scale(1.2);
-        }
-
-        .code-editor {
-            font-family: 'Fira Code', monospace;
-            background: #f6f8fa;
-            border-radius: 8px;
-            padding: 1rem;
-            border: 1px solid #e1e4e8;
         }
 
         .submit-btn {
@@ -168,13 +161,6 @@
 
 <div class="course-header">
     <div class="container">
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#" th:href="@{/courses}">Курсы</a></li>
-                <li class="breadcrumb-item"><a href="#" th:href="@{/courses/{id}(id=${course.id})}" th:text="${course.name}"></a></li>
-                <li class="breadcrumb-item active" aria-current="page" th:text="${section.title}"></li>
-            </ol>
-        </nav>
         <h1 class="display-5 mb-0" th:text="${section.title}"></h1>
         <p class="lead mb-0" th:text="'Тест по разделу: ' + ${course.name}"></p>
     </div>
@@ -261,7 +247,6 @@
 
     window.addEventListener('DOMContentLoaded', function () {
         require(['vs/editor/editor.main'], function () {
-            // Здесь твой код инициализации редакторов
             document.querySelectorAll('.code-answer-block').forEach(container => {
                 const testId = container.getAttribute('data-test-id');
 
@@ -283,14 +268,12 @@
         });
     });
 
-    // Функция запуска кода (используем Judge0 API)
     function runCode(testId) {
         const code = window[`editor_${testId}`].getValue();
         const outputElement = document.getElementById(`output-${testId}`);
 
         outputElement.innerHTML = '<i class="bi bi-hourglass"></i> Выполнение кода...';
 
-        // Пример использования Judge0 API
         fetch('https://judge0-ce.p.rapidapi.com/submissions', {
             method: 'POST',
             headers: {
@@ -385,8 +368,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.nls.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.45.0/min/vs/editor/editor.main.js"></script>
 
-<!--&lt;!&ndash; Prettier для форматирования &ndash;&gt;-->
-<!--<script src="https://cdn.jsdelivr.net/npm/prettier@2.7.1/standalone.min.js"></script>-->
-<!--<script src="https://cdn.jsdelivr.net/npm/prettier@2.7.1/parser-babel.min.js"></script>-->
 </body>
 </html>

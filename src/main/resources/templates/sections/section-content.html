@@ -11,36 +11,26 @@
         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 80px;
         }
-        .header {
-            background-color: #fff;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #eee;
+        .navbar-binario {
+            background-color: #4e73df !important;
+            padding: 0.5rem 1rem !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
         }
-        .back-link {
-            color: #4e73df;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            font-weight: 500;
+
+        .navbar-binario .navbar-brand,
+        .navbar-binario .nav-link {
+            color: rgba(255,255,255,0.9) !important;
         }
-        .back-link:hover {
-            color: #3a5ec0;
+
+        .navbar-binario .navbar-brand:hover,
+        .navbar-binario .nav-link:hover {
+            color: white !important;
         }
-        .content-card {
-            background: #fff;
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .section-title {
-            color: #2d3748;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #4e73df;
+
+        .navbar-binario .navbar-toggler {
+            border-color: rgba(255,255,255,0.5) !important;
         }
         .section-content {
             color: #2d3748;
@@ -71,32 +61,6 @@
             padding: 1rem;
             border-radius: 8px;
             margin: 1.5rem 0;
-        }
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
-        }
-        .nav-button {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.75rem 1.5rem;
-            background: #4e73df;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background-color 0.2s;
-        }
-        .nav-button:hover {
-            background: #3a5ec0;
-            color: #fff;
-        }
-        .nav-button.disabled {
-            background: #e2e8f0;
-            color: #a0aec0;
-            pointer-events: none;
         }
         .nav-button i {
             font-size: 1.2rem;

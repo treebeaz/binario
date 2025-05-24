@@ -4,16 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Личный кабинет студента | Binario</title>
-    <!-- Подключаем Bootstrap и иконки -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Common Styles -->
 
     <style th:fragment="commonStyles">
         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            padding-top: 56px;
+            padding-top: 80px;
         }
         .navbar {
             background-color: #4e73df;
@@ -23,11 +21,7 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0,0,0,0.1);
         }
-        .card-header {
-            background-color: #fff;
-            border-bottom: 1px solid #eee;
-            padding: 1.5rem;
-        }
+
         .btn-primary {
             background-color: #4e73df;
             border: none;
@@ -39,10 +33,8 @@
 
 </head>
 <body>
-    <!-- Common Navigation -->
     <div th:replace="fragments/navbar :: navbar"></div>
 
-    <!-- Основной контент -->
     <div class="container">
         <div class="row mb-4">
             <div class="col">
@@ -58,7 +50,6 @@
             </div>
         </div>
 
-        <!-- Информация о пользователе -->
         <div class="card mb-4">
             <div class="card-body">
                 <h5 class="card-title">
@@ -74,7 +65,6 @@
             </div>
         </div>
 
-        <!-- Список курсов -->
         <div class="row">
             <div th:each="course : ${courses}" class="col-md-6 col-lg-4 mb-4">
                 <div class="card h-100">
@@ -93,7 +83,6 @@
             </div>
         </div>
 
-        <!-- Если нет записанных курсов -->
         <div th:if="${#lists.isEmpty(courses)}" class="text-center py-5">
             <i class="bi bi-emoji-smile display-1 text-muted"></i>
             <h3 class="mt-3">У вас пока нет записанных курсов</h3>
@@ -104,7 +93,6 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

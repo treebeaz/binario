@@ -1,5 +1,6 @@
 package com.binario.repository;
 
+import com.binario.entity.Course;
 import com.binario.entity.UserCourse;
 import com.binario.entity.UserCourseId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,8 @@ public interface UserCourseRepository extends JpaRepository<UserCourse, UserCour
 
     @Query("SELECT CASE WHEN COUNT(uc) > 0 THEN true ELSE false END FROM UserCourse uc WHERE uc.user.id = :userId AND uc.course.id = :courseId")
     boolean isUserEnrolledInCourse(@Param("userId") Long userId, @Param("courseId") Long courseId);
+
+    List<UserCourseRepository> findByIdCourseId(Long courseId);
+
+    List<UserCourse> findCourseByUserId(Long userId);
 }

@@ -2,9 +2,7 @@ package com.binario.service;
 
 import com.binario.entity.Course;
 import com.binario.entity.User;
-import com.binario.repository.ChapterRepository;
 import com.binario.repository.CourseRepository;
-import com.binario.repository.CourseSectionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,15 +11,9 @@ import java.util.List;
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
-    private final ChapterRepository chapterRepository;
-    private final CourseSectionRepository courseSectionRepository;
 
-    public CourseService(CourseRepository courseRepository,
-                         ChapterRepository chapterRepository,
-                         CourseSectionRepository courseSectionRepository) {
+    public CourseService(CourseRepository courseRepository) {
         this.courseRepository = courseRepository;
-        this.chapterRepository = chapterRepository;
-        this.courseSectionRepository = courseSectionRepository;
     }
 
     public List<Course> getAllCourse() {

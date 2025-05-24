@@ -10,51 +10,26 @@
         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 80px;
         }
-        .header {
-            background-color: #fff;
-            padding: 2rem 0;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid #eee;
+        .navbar-binario {
+            background-color: #4e73df !important;
+            padding: 0.5rem 1rem !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
         }
-        .back-link {
-            color: #4e73df;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            font-weight: 500;
+
+        .navbar-binario .navbar-brand,
+        .navbar-binario .nav-link {
+            color: rgba(255,255,255,0.9) !important;
         }
-        .back-link:hover {
-            color: #3a5ec0;
+
+        .navbar-binario .navbar-brand:hover,
+        .navbar-binario .nav-link:hover {
+            color: white !important;
         }
-        .chapter-card {
-            background: #fff;
-            border-radius: 10px;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .chapter-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .chapter-title {
-            color: #2d3748;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .chapter-description {
-            color: #718096;
-            font-size: 0.9rem;
-        }
-        .section-count {
-            color: #4e73df;
-            font-size: 0.9rem;
-            font-weight: 500;
+
+        .navbar-binario .navbar-toggler {
+            border-color: rgba(255,255,255,0.5) !important;
         }
         .no-chapters {
             text-align: center;
@@ -69,7 +44,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Стили для аккордеона глав */
         .accordion-button:not(.collapsed) {
             background-color: #f8f9fa;
             color: #4e73df;
@@ -80,7 +54,6 @@
             border-color: rgba(0,0,0,.125);
         }
 
-        /* Стили для списка разделов */
         .list-group-item {
             border-left: none;
             border-right: none;
@@ -101,20 +74,16 @@
     </style>
 </head>
 <body>
-<!-- CHAPTERS -->
     <div th:replace="fragments/navbar :: navbar"></div>
 
     <div class="container">
-        <header class="header">
-            <div class="d-flex justify-content-between align-items-center">
-                <h2 class="mb-0" th:text="${course.name}">Название курса</h2>
-                <a class="back-link" th:href="@{/student/profile}">
-                    <i class="bi bi-arrow-left me-2"></i>Вернуться в личный кабинет
-                </a>
-            </div>
+        <header class="d-flex justify-content-between align-items-center py-4 border-bottom mb-4">
+            <h2 class="mb-0" th:text="${course.name}">Название курса</h2>
+            <a class="btn btn-outline-primary d-flex align-items-center" th:href="@{/student/profile}">
+                <i class="bi bi-arrow-left me-2"></i> Вернуться в личный кабинет
+            </a>
         </header>
 
-        <!-- Добавляем блок с результатами теста -->
         <div th:if="${testResults}" class="alert alert-success mt-3">
             <h4>Результаты отправлены на проверку</h4>
         </div>
@@ -122,10 +91,9 @@
         <div th:if="${chapters}" class="mb-4">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h4 class="mb-0">Содержание курса</h4>
-                <span class="badge bg-primary" th:text="${#lists.size(chapters) + ' глав'}">0 глав</span>
+                <span class="badge bg-primary" th:text="${#lists.size(chapters) + ' глав(а)'}">0 глав</span>
             </div>
 
-            <!-- Аккордеон для глав и разделов -->
             <div class="accordion" id="chaptersAccordion">
                 <div th:each="chapter : ${chapters}" class="accordion-item mb-3">
                     <h2 class="accordion-header">
@@ -158,13 +126,11 @@
 
                                     <div class="d-flex flex-column align-items-end">
                                         <div th:if="${testsBySection[section.id] != null and !#lists.isEmpty(testsBySection[section.id])}">
-                                            <a th:href="@{/courses/{courseId}/sections/{sectionId}/tests(courseId=${course.id}, sectionId=${section.id})}"
-                                               class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2 mb-2">
-                                                <i class="bi bi-pencil-square"></i>
-                                                Пройти тест
-                                            </a>
+                                                <a th:href="@{/courses/{courseId}/sections/{sectionId}/tests(courseId=${course.id}, sectionId=${section.id})}"
+                                                   class="btn btn-outline-primary btn-sm">
+                                                    Пройти тест
+                                                </a>
                                         </div>
-
                                         <span class="badge bg-primary rounded-pill">
                                             <i class="bi bi-arrow-right"></i>
                                         </span>
@@ -187,4 +153,4 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-</html> 
+</html>

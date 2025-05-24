@@ -2,22 +2,16 @@ package com.binario.service;
 
 import com.binario.entity.SectionsTests;
 import com.binario.entity.User;
+import com.binario.entity.UserCourse;
 import com.binario.entity.UserTestAnswer;
 import com.binario.model.ChoiceAnswer;
+import com.binario.repository.UserRepository;
 import com.binario.repository.UserTestAnswerRepository;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,17 +19,12 @@ public class UserTestAnswerService {
     @Autowired
     private UserTestAnswerRepository userTestAnswerRepository;
 
-    public UserTestAnswer submitAnswer(UserTestAnswer userTestAnswer) {
-        return userTestAnswerRepository.save(userTestAnswer);
-    }
+    private final UserCourseService userCourseService;
+    @Autowired
+    private UserRepository userRepository;
 
-    public UserTestAnswer getAnswer(User user, SectionsTests section) {
-        return userTestAnswerRepository.findByUserIdAndTests(user.getId(), section)
-                .orElseThrow( () -> new RuntimeException("Answer not found"));
-    }
-
-    public List<UserTestAnswer> getAnswersByUser(Long userId) {
-        return userTestAnswerRepository.findByUserId(userId);
+    public UserTestAnswerService(UserCourseService userCourseService) {
+        this.userCourseService = userCourseService;
     }
 
     public boolean checkAnswer(SectionsTests test, Object answerData, UserTestAnswer userTestAnswer) {
@@ -89,11 +78,11 @@ public class UserTestAnswerService {
     private boolean checkTextAnswer(SectionsTests test, Object answerData) {
         try {
             String correctAnswer = test.getTextAnswer();
-            
+
             String userAnswer = ((Map<String, Object>) answerData).get("value").toString();
-            
+
             return correctAnswer != null &&
-                   correctAnswer.trim().equalsIgnoreCase(userAnswer.trim());
+                    correctAnswer.trim().equalsIgnoreCase(userAnswer.trim());
         } catch (Exception e) {
             return false;
         }
@@ -105,7 +94,7 @@ public class UserTestAnswerService {
 
             Map<String, Object> codeResult = new HashMap<>();
             codeResult.put("code", userCode);
-            
+
             userTestAnswer.setCodeResult(codeResult);
             return false;
         } catch (Exception e) {
@@ -119,20 +108,20 @@ public class UserTestAnswerService {
     @Transactional
     public void saveAnswer(UserTestAnswer userTestAnswer) {
         Optional<UserTestAnswer> existingAnswer = userTestAnswerRepository.findByUserIdAndTests(
-            userTestAnswer.getUser().getId(), 
-            userTestAnswer.getTests()
+                userTestAnswer.getUser().getId(),
+                userTestAnswer.getTests()
         );
 
         UserTestAnswer answerToSave;
         if (existingAnswer.isPresent()) {
-            // Если ответ существует, обновляем его
+            // если ответ существует, обновляю
             answerToSave = existingAnswer.get();
             answerToSave.setAnswerData(userTestAnswer.getAnswerData());
             answerToSave.setCodeResult(userTestAnswer.getCodeResult());
             answerToSave.setScore(userTestAnswer.getScore());
             answerToSave.setSubmitAt(userTestAnswer.getSubmitAt());
         } else {
-            // Если ответа нет, создаем новый
+            // если ответа нет, создаю новый
             answerToSave = new UserTestAnswer();
             answerToSave.setUser(userTestAnswer.getUser());
             answerToSave.setTests(userTestAnswer.getTests());
@@ -148,7 +137,7 @@ public class UserTestAnswerService {
             boolean correct = checkAnswer(answerToSave.getTests(), answerToSave.getAnswerData(), answerToSave);
             answerToSave.setCorrect(correct);
         }
-        
+
         userTestAnswerRepository.save(answerToSave);
     }
 
@@ -158,15 +147,20 @@ public class UserTestAnswerService {
     }
 
     public List<UserTestAnswer> findUnverifiedCodeAnswers() {
-        List<UserTestAnswer> answers = userTestAnswerRepository.findByCodeResultIsNotNullAndIsCorrectFalse();
-        return answers;
+        return userTestAnswerRepository.findByCodeResultIsNotNullAndIsCorrectFalse()
+                .stream()
+                .filter(uta -> {
+                    Map<String, Object> codeResult = uta.getCodeResult();
+                    return !codeResult.isEmpty() && codeResult.containsKey("code");
+                })
+                .collect(Collectors.toList());
     }
-    
+
     public UserTestAnswer findById(Long id) {
         return userTestAnswerRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Answer not found"));
+                .orElseThrow(() -> new RuntimeException("Answer not found"));
     }
-    
+
     @Transactional
     public void reviewCodeAnswer(Long answerId, Integer score, String comment) {
         UserTestAnswer answer = findById(answerId);
@@ -174,5 +168,36 @@ public class UserTestAnswerService {
         answer.setScore(score);
         answer.setCorrect(true);
         userTestAnswerRepository.save(answer);
+    }
+
+    // метод для подсчета баллов для каждого пользователя по всем разделам.
+    public List<Object[]> getStudentsProgressByCourse(Long courseId) {
+        List<UserCourse> userCourses = userCourseService.findByCourseId(courseId);
+        Integer maxScore = userTestAnswerRepository.findMaxPossibleScoreForCourse(courseId);
+        maxScore = maxScore != null ? maxScore : 0;
+
+        List<Object[]> progressList = new ArrayList<>();
+
+        for (UserCourse userCourse : userCourses) {
+            User user = userCourse.getUser();
+            Integer userScore = userTestAnswerRepository.findSumScoreByUserAndCourse(user, courseId);
+            userScore = userScore != null ? userScore : 0;
+
+            double progress = (maxScore > 0) ? (userScore * 100.0 / maxScore) : 0;
+
+            progressList.add(new Object[]{
+                    user,          // [0] - User
+                    userScore,     // [1] - набранные баллы
+                    progress,      // [2] - прогресс в процентах
+                    maxScore       // [3] - максимальный балл
+            });
+        }
+
+        return progressList;
+    }
+
+    // Метод для подсчета баллов одного пользователя по конкретному курсу
+    public Integer getTotalScoreByUserIdAndCourseId(Long userId, Long courseId) {
+        return userTestAnswerRepository.sumScoreByUserIdAndCourseId(userId, courseId);
     }
 }

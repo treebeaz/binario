@@ -25,10 +25,6 @@ public class SectionsTestsService {
                 .orElseThrow(() -> new RuntimeException("Test not found"));
     }
 
-    public SectionsTests save(SectionsTests sectionsTests) {
-        return sectionsTestsRepository.save(sectionsTests);
-    }
-
     public void createTests(SectionsTests sectionsTests) {
         sectionsTestsRepository.save(sectionsTests);
     }

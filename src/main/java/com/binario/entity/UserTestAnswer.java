@@ -2,12 +2,9 @@ package com.binario.entity;
 
 import com.binario.converter.MapJsonConverter;
 import jakarta.persistence.*;
-import jakarta.websocket.ClientEndpoint;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Entity
@@ -36,7 +33,7 @@ public class UserTestAnswer {
     private boolean isCorrect;
 
     @Column(name = "score", nullable = false)
-    private int score;
+    private Integer score;
 
     @Column(name = "code_result", columnDefinition = "jsonb")
     @JdbcTypeCode(SqlTypes.JSON)
@@ -47,6 +44,7 @@ public class UserTestAnswer {
 
     @Column(name = "teacher_comment", columnDefinition = "TEXT")
     private String teacherComment;
+
 
     public Long getId() {
         return id;
@@ -88,11 +86,11 @@ public class UserTestAnswer {
         isCorrect = correct;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 
-    public void setScore(int score) {
+    public void setScore(Integer score) {
         this.score = score;
     }
 

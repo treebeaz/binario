@@ -40,15 +40,4 @@ public class ChapterService{
         Integer maxOrder = chapterRepository.findMaxOrderByCourseId(courseId);
         return (maxOrder == null) ? 1 : maxOrder + 1;
     }
-
-//    public void deleteChapter(Long id) {
-//        chapterRepository.deleteById(id);
-//    }
-//
-//    public Chapter updateChapter(Chapter chapter) {
-//        if (!chapterRepository.existsById(chapter.getId())) {
-//            throw new RuntimeException("Глава не найдена");
-//        }
-//        return chapterRepository.save(chapter);
-//    }
 }
