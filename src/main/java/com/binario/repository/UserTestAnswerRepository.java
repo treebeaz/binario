@@ -1,6 +1,7 @@
 package com.binario.repository;
 
 import com.binario.entity.SectionsTests;
+import com.binario.entity.TestStatus;
 import com.binario.entity.User;
 import com.binario.entity.UserTestAnswer;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +15,8 @@ import java.util.Optional;
 @Repository
 public interface UserTestAnswerRepository extends JpaRepository<UserTestAnswer, Long> {
     Optional<UserTestAnswer> findByUserIdAndTests(Long userId, SectionsTests test);
-    List<UserTestAnswer> findByUserId(Long userId);
+    boolean existsByUser_IdAndTests_Section_Id(Long userId, Long sectionId);
+    List<UserTestAnswer> findByUser_IdAndTests_Section_Id(Long userId, Long sectionId);
     List<UserTestAnswer> findByCodeResultIsNotNullAndIsCorrectFalse();
     @Query("""
         SELECT SUM(uta.score)

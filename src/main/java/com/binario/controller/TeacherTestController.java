@@ -19,7 +19,7 @@ import java.util.List;
 public class TeacherTestController {
     private final SectionsTestsService sectionsTestsService;
     private final CourseSectionService courseSectionService;
-    private JsonConverterHelper jsonConverterHelper;
+    private final JsonConverterHelper jsonConverterHelper;
 
     public TeacherTestController(SectionsTestsService sectionsTestsService,
                                  CourseSectionService courseSectionService,

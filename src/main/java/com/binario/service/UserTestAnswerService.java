@@ -1,9 +1,6 @@
 package com.binario.service;
 
-import com.binario.entity.SectionsTests;
-import com.binario.entity.User;
-import com.binario.entity.UserCourse;
-import com.binario.entity.UserTestAnswer;
+import com.binario.entity.*;
 import com.binario.model.ChoiceAnswer;
 import com.binario.repository.UserRepository;
 import com.binario.repository.UserTestAnswerRepository;
@@ -170,7 +167,6 @@ public class UserTestAnswerService {
         userTestAnswerRepository.save(answer);
     }
 
-    // метод для подсчета баллов для каждого пользователя по всем разделам.
     public List<Object[]> getStudentsProgressByCourse(Long courseId) {
         List<UserCourse> userCourses = userCourseService.findByCourseId(courseId);
         Integer maxScore = userTestAnswerRepository.findMaxPossibleScoreForCourse(courseId);
@@ -196,8 +192,17 @@ public class UserTestAnswerService {
         return progressList;
     }
 
-    // Метод для подсчета баллов одного пользователя по конкретному курсу
-    public Integer getTotalScoreByUserIdAndCourseId(Long userId, Long courseId) {
-        return userTestAnswerRepository.sumScoreByUserIdAndCourseId(userId, courseId);
+    public boolean hasUserCompletedTest(Long userId, Long sectionId) {
+        return userTestAnswerRepository.existsByUser_IdAndTests_Section_Id(userId, sectionId);
+    }
+
+    public void markTestAsCompleted(Long userId, Long sectionId) {
+        List<UserTestAnswer> answers = userTestAnswerRepository.findByUser_IdAndTests_Section_Id(userId, sectionId);
+        answers.forEach(answer -> {
+            if(answer.getStatus() != TestStatus.EVALUATED) {
+                answer.setStatus(TestStatus.EVALUATED);
+                userTestAnswerRepository.save(answer);
+            }
+        });
     }
 }

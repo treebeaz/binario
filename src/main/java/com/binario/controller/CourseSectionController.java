@@ -46,10 +46,11 @@ public class CourseSectionController {
     }
 
     @GetMapping
-    public String showChapters(@AuthenticationPrincipal User user,
+    public String showChapters(@AuthenticationPrincipal UserDetails userDetails,
                                @PathVariable Long courseId,
                                Model model) {
 
+        User user = userService.findByUsername(userDetails.getUsername());
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
@@ -57,11 +58,17 @@ public class CourseSectionController {
         List<Chapter> chapters = courseSectionService.getChaptersWithSections(courseId);
 
         Map<Long, List<SectionsTests>> testsBySection = new HashMap<>();
+        Map<Long, Boolean> testCompletionStatus = new HashMap<>(); // Новый Map для статусов
+
+
         for (Chapter chapter : chapters) {
             for (CourseSection section : chapter.getSections()) {
                 List<SectionsTests> tests = sectionsTestsService.getTestBySectionId(section.getId());
                 if (tests != null && !tests.isEmpty()) {
                     testsBySection.put(section.getId(), tests);
+
+                    boolean isCompleted = userTestAnswerService.hasUserCompletedTest(user.getId(), section.getId());
+                    testCompletionStatus.put(section.getId(), isCompleted);
                 }
             }
         }
@@ -70,6 +77,7 @@ public class CourseSectionController {
         model.addAttribute("course", course);
         model.addAttribute("chapters", chapters);
         model.addAttribute("testsBySection", testsBySection);
+        model.addAttribute("testCompletionStatus", testCompletionStatus);
 
         return "sections/chapters";
     }
@@ -144,9 +152,15 @@ public class CourseSectionController {
         User user = userService.findByUsername(userDetails.getUsername());
         List<SectionsTests> tests = sectionsTestsService.getTestBySectionId(sectionId);
 
+        if(userTestAnswerService.hasUserCompletedTest(user.getId(), sectionId)) {
+            redirectAttributes.addFlashAttribute("error", "Вы уже прошли тест");
+            return "redirect:/courses/" + courseId + "/sections/" + sectionId;
+        }
+
         int totalScore = 0;
         int maxPossibleScore = 0;
         int correctAnswers = 0;
+        boolean hasCodeQuestion = false;
 
         for(SectionsTests test : tests) {
             String paramName = "answer_" + test.getId();
@@ -171,20 +185,25 @@ public class CourseSectionController {
 
             boolean isCorrect = userTestAnswerService.checkAnswer(test, answerData, answer);
             if (!"code_answer".equals(test.getQuestionType())) {
-
                 answer.setCorrect(isCorrect);
+                answer.setStatus(TestStatus.EVALUATED);
                 answer.setScore(isCorrect ? test.getMaxScore() : 0);
+
+                if (isCorrect) {
+                    correctAnswers++;
+                    totalScore += test.getMaxScore();
+                }
             }
             else {
+                hasCodeQuestion = true;
+                answer.setStatus(TestStatus.SUBMITTED);
                 answer.setScore(0);
             }
-
             userTestAnswerService.saveAnswer(answer);
+        }
 
-            if (isCorrect) {
-                correctAnswers++;
-                totalScore += test.getMaxScore();
-            }
+        if(!hasCodeQuestion) {
+            userTestAnswerService.markTestAsCompleted(user.getId(), sectionId);
         }
 
         redirectAttributes.addFlashAttribute("testResults", true);
@@ -192,6 +211,7 @@ public class CourseSectionController {
         redirectAttributes.addFlashAttribute("maxPossibleScore", maxPossibleScore);
         redirectAttributes.addFlashAttribute("correctAnswers", correctAnswers);
         redirectAttributes.addFlashAttribute("totalQuestions", tests.size());
+        redirectAttributes.addFlashAttribute("hasCodeQuestion", hasCodeQuestion);
 
         return "redirect:/courses/" + courseId + "/sections";
     }

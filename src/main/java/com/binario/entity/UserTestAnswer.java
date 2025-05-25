@@ -45,6 +45,9 @@ public class UserTestAnswer {
     @Column(name = "teacher_comment", columnDefinition = "TEXT")
     private String teacherComment;
 
+    @Transient
+    @Enumerated(EnumType.STRING)
+    private TestStatus status = TestStatus.NOT_STARTED;
 
     public Long getId() {
         return id;
@@ -116,5 +119,25 @@ public class UserTestAnswer {
 
     public void setTeacherComment(String teacherComment) {
         this.teacherComment = teacherComment;
+    }
+
+    public TestStatus getStatus() {
+        if (this.tests == null) {
+            return TestStatus.NOT_STARTED;
+        }
+
+        if (this.isCorrect || this.score > 0) {
+            return TestStatus.EVALUATED;
+        }
+
+        if (this.answerData != null || this.codeResult != null) {
+            return TestStatus.SUBMITTED;
+        }
+
+        return TestStatus.NOT_STARTED;
+    }
+
+    public void setStatus(TestStatus status) {
+        this.status = status;
     }
 }

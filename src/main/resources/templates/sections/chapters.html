@@ -114,28 +114,34 @@
 
                             <div class="list-group">
                                 <div th:each="section : ${chapter.sections}"
-                                     class="list-group-item d-flex justify-content-between align-items-start gap-3 flex-wrap">
+                                     class="list-group-item d-flex justify-content-between align-items-center gap-3">
 
                                     <div class="flex-grow-1">
                                         <a th:href="@{/courses/{courseId}/sections/{sectionId}(courseId=${course.id}, sectionId=${section.id})}"
-                                           class="text-decoration-none text-dark">
+                                           class="text-decoration-none text-dark d-block">
                                             <h6 class="mb-1" th:text="${section.title}">Название раздела</h6>
-                                            <small class="text-muted d-block" th:text="${section.description}">Описание раздела</small>
+                                            <small class="text-muted" th:text="${section.description}">Описание раздела</small>
                                         </a>
                                     </div>
 
-                                    <div class="d-flex flex-column align-items-end">
+                                    <div class="d-flex align-items-center gap-2">
                                         <div th:if="${testsBySection[section.id] != null and !#lists.isEmpty(testsBySection[section.id])}">
+                                            <div th:if="${testCompletionStatus[section.id]}">
+                                                <span class="text-success small">
+                                                    <i class="bi bi-check-circle"></i> Пройден
+                                                </span>
+                                            </div>
+                                            <div th:unless="${testCompletionStatus[section.id]}">
                                                 <a th:href="@{/courses/{courseId}/sections/{sectionId}/tests(courseId=${course.id}, sectionId=${section.id})}"
                                                    class="btn btn-outline-primary btn-sm">
                                                     Пройти тест
                                                 </a>
+                                            </div>
                                         </div>
                                         <span class="badge bg-primary rounded-pill">
                                             <i class="bi bi-arrow-right"></i>
                                         </span>
                                     </div>
-
                                 </div>
                             </div>
                         </div>

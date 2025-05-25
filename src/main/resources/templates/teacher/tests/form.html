@@ -64,7 +64,7 @@
             <!-- Для SINGLE_CHOICE и MULTIPLE_CHOICE -->
             <div class="mb-3 answer-options-block">
                 <label class="form-label">Варианты ответов (по одному на строку)</label>
-                <textarea class="form-control" id="simpleOptions" rows="5" placeholder="Привет\nПока\nКак дела"></textarea>
+                <textarea class="form-control" id="simpleOptions" rows="5" placeholder="Ответ1\nОтвет 2\nОтвет 3"></textarea>
             </div>
 
             <div class="mb-3 answer-options-block">
@@ -72,19 +72,11 @@
                 <input type="text" class="form-control" id="correctAnswers" placeholder="1,3">
             </div>
 
-            <!-- Для TEXT_ANSWER -->
             <div class="mb-3" id="textAnswerBlock" style="display:none;">
                 <label class="form-label">Правильный текстовый ответ</label>
                 <textarea class="form-control" name="textAnswer" rows="3"></textarea>
             </div>
 
-            <!-- Для CODE_ANSWER -->
-            <div class="mb-3" id="codeAnswerBlock" style="display:none;">
-                <label class="form-label">Правильный ответ в виде кода</label>
-                <textarea class="form-control" name="codeAnswer" rows="5" placeholder="Например, код на JavaScript"></textarea>
-            </div>
-
-            <!-- Скрытые поля для JSON (для вариантов с выбором) -->
             <input type="hidden" name="rawAnswerOptions" id="rawAnswerOptions">
             <input type="hidden" name="rawChoiceAnswers" id="rawChoiceAnswers">
 

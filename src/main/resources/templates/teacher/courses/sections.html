@@ -53,13 +53,6 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/teacher/courses">Курсы</a></li>
-                        <li class="breadcrumb-item"><a th:href="@{/teacher/courses/{id}/chapters(id=${chapter.course.id})}" th:text="${chapter.course.name}">Название курса</a></li>
-                        <li class="breadcrumb-item active" th:text="${chapter.title}">Название главы</li>
-                    </ol>
-                </nav>
                 <h2 th:text="${chapter.title}">Название главы</h2>
                 <p class="text-muted" th:text="${chapter.description}">Описание главы</p>
             </div>
