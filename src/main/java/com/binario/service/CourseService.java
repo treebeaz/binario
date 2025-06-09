@@ -5,11 +5,16 @@ import com.binario.entity.User;
 import com.binario.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
+@Transactional
 public class CourseService {
+
+    /**
+     * Класс-сервис для работы с курсами
+     */
+
     private final CourseRepository courseRepository;
 
     public CourseService(CourseRepository courseRepository) {
@@ -28,7 +33,6 @@ public class CourseService {
         return courseRepository.findByCreatedBy(teacher);
     }
 
-    @Transactional
     public void saveCourse(Course newCourse) {
         if(newCourse.getId() == null) {
             Course savedCourse = new Course();
@@ -39,7 +43,6 @@ public class CourseService {
         }
     }
 
-    @Transactional
     public void deleteCourse(Long courseId) {
         courseRepository.deleteById(courseId);
     }

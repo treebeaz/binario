@@ -10,13 +10,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.List;
 
 @Controller
 @RequestMapping("/teacher/sections/{sectionId}/tests")
 @PreAuthorize("hasRole('TEACHER')")
 public class TeacherTestController {
+
+    /**
+     * Класс-конструктор для обработки тестов на стороне преподавателя
+     */
+
     private final SectionsTestsService sectionsTestsService;
     private final CourseSectionService courseSectionService;
     private final JsonConverterHelper jsonConverterHelper;

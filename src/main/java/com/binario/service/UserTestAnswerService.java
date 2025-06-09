@@ -2,26 +2,23 @@ package com.binario.service;
 
 import com.binario.entity.*;
 import com.binario.model.ChoiceAnswer;
-import com.binario.repository.UserRepository;
 import com.binario.repository.UserTestAnswerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserTestAnswerService {
-    @Autowired
-    private UserTestAnswerRepository userTestAnswerRepository;
-
+    /**
+     * Класс-сервис для работы с ответами студентов на тест
+     */
+    private final UserTestAnswerRepository userTestAnswerRepository;
     private final UserCourseService userCourseService;
-    @Autowired
-    private UserRepository userRepository;
 
-    public UserTestAnswerService(UserCourseService userCourseService) {
+    public UserTestAnswerService(UserCourseService userCourseService, UserTestAnswerRepository userTestAnswerRepository) {
         this.userCourseService = userCourseService;
+        this.userTestAnswerRepository = userTestAnswerRepository;
     }
 
     public boolean checkAnswer(SectionsTests test, Object answerData, UserTestAnswer userTestAnswer) {

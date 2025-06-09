@@ -1,0 +1,38 @@
+@startuml
+title Диаграмма активности: Регистрация пользователей
+
+skinparam dpi 150
+skinparam {
+  FontSize 16
+  FontName "Arial"
+  ActivityFontSize 16
+  ActivityFontName "Arial"
+  ArrowFontSize 14
+  ArrowFontName "Arial"
+  TitleFontSize 18
+  TitleFontName "Arial"
+}
+
+start
+
+partition Регистрация {
+  :Пользователь открывает /auth/register;
+  :Показ формы регистрации;
+
+  repeat
+    :Ввод данных;
+    :Нажатие "Зарегистрироваться";
+    :Проверка уникальности логина и email;
+
+    if (Данные уникальны?) then (Да)
+      :Хеширование пароля (BCrypt);
+      :Создание аккаунта пользователя;
+      :Сохранение в БД;
+    else (Нет)
+        :Ошибка "Логин/email уже используется";
+    endif
+  repeat while (Пользователь прошел регистрацию?) is (Нет)
+  :Редирект на /auth/login;
+}
+
+@enduml

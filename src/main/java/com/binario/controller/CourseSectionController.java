@@ -52,14 +52,13 @@ public class CourseSectionController {
 
         User user = userService.findByUsername(userDetails.getUsername());
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new RuntimeException("Курс не найден"));
 
 
         List<Chapter> chapters = courseSectionService.getChaptersWithSections(courseId);
 
         Map<Long, List<SectionsTests>> testsBySection = new HashMap<>();
-        Map<Long, Boolean> testCompletionStatus = new HashMap<>(); // Новый Map для статусов
-
+        Map<Long, Boolean> testCompletionStatus = new HashMap<>();
 
         for (Chapter chapter : chapters) {
             for (CourseSection section : chapter.getSections()) {

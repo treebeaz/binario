@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserCourseService {
+    /**
+     *  Класс для записи студента на курс.
+     */
     private final UserCourseRepository userCourseRepository;
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
@@ -68,7 +71,4 @@ public class UserCourseService {
         return userCourseRepository.findByCourseId(courseId);
     }
 
-    public List<UserCourse> getCourseByUserId(Long userId) {
-        return userCourseRepository.findCourseByUserId(userId);
-    }
 }

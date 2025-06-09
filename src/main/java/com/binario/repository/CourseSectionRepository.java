@@ -15,6 +15,4 @@ public interface CourseSectionRepository extends JpaRepository<CourseSection, Lo
     List<CourseSection> findByChapterIdOrderByOrderAsc(Long chapterId);
     @Query("SELECT MAX(s.order) FROM CourseSection s WHERE s.chapter.id = :chapterId")
     Integer findMaxOrderByChapterId(@Param("chapterId") Long chapterId);
-
-
 }

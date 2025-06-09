@@ -1,15 +1,16 @@
 package com.binario.converter;
 
 import com.binario.model.ChoiceAnswer;
-import com.binario.model.TestCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
 
 @Component
 public class JsonConverterHelper {
+    /**
+     * Класс-компонент для обработки JSON-файлов
+     */
     private final AnswerOptionListConverter answerOptionListConverter;
     private final ChoiceAnswerListConverter choiceAnswerListConverter;
     private final TestCaseListConverter testCaseListConverter;

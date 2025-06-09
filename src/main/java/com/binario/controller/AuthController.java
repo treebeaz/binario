@@ -2,6 +2,7 @@ package com.binario.controller;
 
 import com.binario.entity.User;
 import com.binario.exception.UserAlreadyExistsException;
+import com.binario.exception.UserEmailAlreadyExistsException;
 import com.binario.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,7 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
-
+    /**
+     * Контроллер для обработки входа и регистрации в аккаунт.
+     */
     private final UserService userService;
 
     public AuthController(UserService userService) {
@@ -37,14 +40,20 @@ public class AuthController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
-
         try {
             userService.registerUser(user);
-            redirectAttributes.addFlashAttribute("message", "Регистрация прошла успешно");
+            redirectAttributes.addFlashAttribute("message",
+                    "Регистрация прошла успешно");
             return "redirect:/auth/login";
         }
         catch (UserAlreadyExistsException e) {
-            redirectAttributes.addFlashAttribute("error", "Ошибка при регистрации");
+            redirectAttributes.addFlashAttribute("error",
+                    "Пользователь с таким именем уже существует");
+            return "redirect:/auth/register";
+        }
+        catch (UserEmailAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Пользователь с такой почтой уже существует");
             return "redirect:/auth/register";
         }
     }

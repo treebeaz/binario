@@ -4,27 +4,24 @@ import com.binario.entity.Chapter;
 import com.binario.entity.CourseSection;
 import com.binario.repository.ChapterRepository;
 import com.binario.repository.CourseSectionRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
 public class CourseSectionService {
+
+    /**
+     * Класс-сервис для работы с разделами курса
+     */
+
     private final CourseSectionRepository courseSectionRepository;
     private final ChapterRepository chapterRepository;
-    private final Logger logger = LoggerFactory.getLogger(CourseSectionService.class);
 
 
     public CourseSectionService(CourseSectionRepository courseSectionRepository, ChapterRepository chapterRepository) {
         this.courseSectionRepository = courseSectionRepository;
         this.chapterRepository = chapterRepository;
-    }
-
-    public List<CourseSection> getSectionsByCourseId(Long courseId) {
-        return courseSectionRepository.findByCourseId(courseId);
     }
 
     public List<CourseSection> getAllSectionsByChapterId(Chapter chapter) {
@@ -39,10 +36,6 @@ public class CourseSectionService {
     public CourseSection getSectionById(Long sectionId) {
         return courseSectionRepository.findById(sectionId)
                 .orElseThrow(() -> new RuntimeException("Section not found"));
-    }
-
-    public int countByChapterId(Long chapterId) {
-        return courseSectionRepository.countSectionByChapterId(chapterId);
     }
 
     @Transactional

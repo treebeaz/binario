@@ -1,0 +1,53 @@
+@startuml
+title Диаграмма активности: Вход пользователя в систему
+
+skinparam dpi 150
+skinparam {
+  FontSize 16
+  FontName "Arial"
+  ActivityFontSize 16
+  ActivityFontName "Arial"
+  ArrowFontSize 14
+  ArrowFontName "Arial"
+  TitleFontSize 18
+  TitleFontName "Arial"
+}
+
+start
+
+partition Авторизация {
+  :Пользователь открывает /auth/login;
+  :Показ формы входа;
+
+  repeat
+    :Ввод логина и пароля;
+    :Нажатие "Войти";
+
+    partition Spring Security {
+      :Передача данных в AuthenticationManager;
+      :Вызов CustomUserDetailService;
+      :Поиск пользователя в БД (UserRepository);
+
+      if (Пользователь найден?) then (Да)
+        :Создание UserDetails объекта;
+        :Сравнение паролей (BCrypt);
+         if(Пароль верный ?) then (Да)
+             :Сохранение в SecurityContextHolder;
+         else (Нет)
+            :Пароли не совпадают;
+         endif
+      else (Нет)
+        :Пользователь не найден;
+      endif
+    }
+  repeat while (Аутентификация успешна?) is (Нет)
+
+   if (Роль ?) then (TEACHER)
+        :Редирект на /teacher/dashboard;
+      else (STUDENT)
+        :Редирект на /student/dashboard;
+      endif
+}
+
+stop
+@enduml

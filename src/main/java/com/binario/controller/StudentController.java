@@ -2,7 +2,6 @@ package com.binario.controller;
 
 import com.binario.entity.Course;
 import com.binario.entity.User;
-import com.binario.service.CourseService;
 import com.binario.service.UserCourseService;
 import com.binario.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,19 +13,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.List;
 
 @Controller
 @RequestMapping("/student")
 public class StudentController {
+    /**
+     * Контроллер для обработки записи студента на курс
+     */
     private final UserService userService;
-    private final CourseService courseService;
     private final UserCourseService userCourseService;
 
-    public StudentController(UserService userService, CourseService courseService, UserCourseService userCourseService) {
+    public StudentController(UserService userService, UserCourseService userCourseService) {
         this.userService = userService;
-        this.courseService = courseService;
         this.userCourseService = userCourseService;
     }
 

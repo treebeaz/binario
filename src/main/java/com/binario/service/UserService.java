@@ -25,7 +25,7 @@ public class UserService {
         }
 
         if(userRepository.existsByEmail(user.getEmail())) {
-            throw new UserAlreadyExistsException("Пользователь с такой почтой уже существует");
+            throw new UserEmailAlreadyExistsException("Пользователь с такой почтой уже существует");
         }
 
         User newUser = new User();
@@ -51,10 +51,4 @@ public class UserService {
 
         userRepository.delete(user);
     }
-
-    public User getCurrentUser(UserDetails userDetails) {
-        return userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
-
 }

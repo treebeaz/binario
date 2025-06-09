@@ -4,11 +4,15 @@ import com.binario.entity.Chapter;
 import com.binario.repository.ChapterRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
 public class ChapterService{
+
+    /**
+     * Класс-сервис для работы с главами
+     */
+
     private final ChapterRepository chapterRepository;
 
     public ChapterService(ChapterRepository chapterRepository) {

@@ -8,10 +8,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    /**
+     * Класс конфигурации Spring Security. Определяет доступ к системе по ролям, шифрует пароль и передает форму входа в аккаунт
+     * через кастомный вход /auth/login.
+     */
     private final UserDetailsService userDetailsService;
     private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
 
@@ -24,10 +29,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/auth/login", "/auth/register").permitAll()
-                        .requestMatchers("/courses/**").authenticated()
+                        .requestMatchers("/sections/**").authenticated()
                         .requestMatchers("/teacher/**").hasRole("TEACHER")
                         .requestMatchers("/students/**").hasRole("STUDENT")
                         .anyRequest().authenticated()

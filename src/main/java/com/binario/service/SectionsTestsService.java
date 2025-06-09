@@ -4,12 +4,16 @@ import com.binario.entity.SectionsTests;
 import com.binario.repository.SectionsTestsRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service
 @Transactional
 public class SectionsTestsService {
+
+    /**
+     * Класс-сервис для работы с тестовыми заданиями
+     */
+
     private final SectionsTestsRepository sectionsTestsRepository;
 
     public SectionsTestsService(SectionsTestsRepository sectionsTestsRepository) {
@@ -48,6 +52,4 @@ public class SectionsTestsService {
     public void deleteTests(Long testId) {
         sectionsTestsRepository.deleteById(testId);
     }
-
-
 }
